@@ -1,0 +1,39 @@
+name: Docker Image CI
+
+on:
+  push:
+    tags:
+      - 'v*.*'
+
+env:
+  IMAGE_NAME: docker.pkg.github.com/${{ github.repository }}/ccs930-cc26xx-docker
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set env
+        run: echo "IMAGE_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> ${GITHUB_ENV}
+
+      - uses: actions/checkout@v2
+
+      - name: Build the Docker image
+        run: |
+          docker build . --file Dockerfile --tag "${IMAGE_NAME}:${IMAGE_VERSION}"
+          docker tag "${IMAGE_NAME}:${IMAGE_VERSION}" "${IMAGE_NAME}:latest"
+
+      - name: Login to GitHub Packages
+        env:
+          GHPKG_PASS: ${{ secrets.GITHUB_TOKEN }}
+          GHPKG_USER: ${{ github.actor }}
+        run: |
+          echo ${GHPKG_PASS} | docker login docker.pkg.github.com -u ${GHPKG_USER} --password-stdin
+
+      - name: Push to GitHub Packages
+        run: |
+          docker push "${IMAGE_NAME}:${IMAGE_VERSION}"
+          docker push "${IMAGE_NAME}:latest"
+
