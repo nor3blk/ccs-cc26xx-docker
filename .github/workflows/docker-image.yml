@@ -1,6 +1,7 @@
 name: Docker Image CI
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*.*'
@@ -36,4 +37,3 @@ jobs:
         run: |
           docker push "${IMAGE_NAME}:${IMAGE_VERSION}"
           docker push "${IMAGE_NAME}:latest"
-
