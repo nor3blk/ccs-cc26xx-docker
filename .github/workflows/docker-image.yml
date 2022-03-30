@@ -6,7 +6,7 @@ on:
       - 'v*.*'
 
 env:
-  IMAGE_NAME: docker.pkg.github.com/${{ github.repository }}/ccs930-cc26xx-docker
+  IMAGE_NAME: docker.pkg.github.com/${{ github.repository }}/ccs-cc26xx-docker
 
 jobs:
 
