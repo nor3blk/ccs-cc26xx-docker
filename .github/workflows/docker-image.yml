@@ -7,7 +7,7 @@ on:
       - 'v*.*'
 
 env:
-  IMAGE_NAME: docker.pkg.github.com/${{ github.repository }}/ccs-cc26xx-docker
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
 
@@ -26,12 +26,12 @@ jobs:
           docker build . --file Dockerfile --tag "${IMAGE_NAME}:${IMAGE_VERSION}"
           docker tag "${IMAGE_NAME}:${IMAGE_VERSION}" "${IMAGE_NAME}:latest"
 
-      - name: Login to GitHub Packages
-        env:
-          GHPKG_PASS: ${{ secrets.GITHUB_TOKEN }}
-          GHPKG_USER: ${{ github.actor }}
-        run: |
-          echo ${GHPKG_PASS} | docker login docker.pkg.github.com -u ${GHPKG_USER} --password-stdin
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to GitHub Packages
         run: |
