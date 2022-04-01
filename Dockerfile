@@ -1,10 +1,10 @@
 FROM ubuntu:18.04
 
-ARG ver="9.3.0.00012"
+ARG ver="11.1.0.00011"
 
 ARG ccs="CCS${ver}_linux-x64"
-ARG url="https://software-dl.ti.com/ccs/esd/CCSv9/CCS_9_3_0/exports/${ccs}.tar.gz"
-ARG setup_bin="ccs_setup_${ver}.bin"
+ARG url="https://dr-download.ti.com/software-development/ide-configuration-compiler-or-debugger/MD-J1VdearkvK/${ver}/${ccs}.tar.gz"
+ARG setup_bin="ccs_setup_${ver}.run"
 
 LABEL maintainer="nor3blk"
 
