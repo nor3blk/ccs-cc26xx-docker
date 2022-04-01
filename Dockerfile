@@ -31,7 +31,13 @@ RUN cd /home/${ccs} \
  && chmod a+x ${setup_bin} \
  && ./${setup_bin} --prefix /home/ti \
     --enable-components PF_CC2X \
-    --mode unattended
+    --mode unattended \
+ && cd .. && rm -rf ${ccs}
+
+RUN apt remove -y wget curl \
+ && apt autoremove -y \
+ && apt autoclean \
+ && rm -rf /var/lib/apt/lists/*
 
 ENV PATH="/home/ti/ccs/eclipse:${PATH}"
 
