@@ -1,0 +1,34 @@
+name: Push docker image to the old registry
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: docker.pkg.github.com/nor3blk/ccs930-cc26xx-docker/ccs930-cc26xx-docker
+  IMAGE_VERSION: 11.1.0
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build the Docker image
+        run: |
+          docker build . --file Dockerfile --tag "${IMAGE_NAME}:${IMAGE_VERSION}"
+          docker tag "${IMAGE_NAME}:${IMAGE_VERSION}" "${IMAGE_NAME}:latest"
+
+      - name: Login to GitHub Packages
+        env:
+          GHPKG_PASS: ${{ secrets.GITHUB_TOKEN }}
+          GHPKG_USER: ${{ github.actor }}
+        run: |
+          echo ${GHPKG_PASS} | docker login docker.pkg.github.com -u ${GHPKG_USER} --password-stdin
+
+      - name: Push to GitHub Packages
+        run: |
+          docker push "${IMAGE_NAME}:${IMAGE_VERSION}"
+          docker push "${IMAGE_NAME}:latest"
